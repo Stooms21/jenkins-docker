@@ -1,29 +1,36 @@
 pipeline {
-    agent any 
+    agent any
     environment {
-    DOCKERHUB_CREDENTIALS = credentials('stooms-dockerhub')
+        DOCKERHUB_CREDENTIALS = credentials('stooms-dockerhub')
     }
-    stages { 
-
+    stages {
         stage('Build docker image') {
-            steps {  
-                sh 'docker build -t myapp/flask:$BUILD_NUMBER .'
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
+                        sh 'docker build -t myapp/flask:8 .'
+                    }
+                }
             }
         }
-        stage('login to dockerhub') {
-            steps{
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        stage('Login to DockerHub') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
+                        sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
+                    }
+                }
             }
         }
-        stage('push image') {
-            steps{
-                sh 'docker push myapp/flask:$BUILD_NUMBER'
+        stage('Push image') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
+                        sh 'docker push myapp/flask:8'
+                    }
+                }
             }
-        }
-}
-post {
-        always {
-            sh 'docker logout'
         }
     }
 }
+
