@@ -7,7 +7,7 @@ pipeline {
 
         stage('Build docker image') {
             steps {  
-                sh 'docker build -t myapp/flask:$BUILD_NUMBER .'
+                sh 'docker build -t stouzet1/flask:$BUILD_NUMBER .'
             }
         }
         stage('login to dockerhub') {
@@ -17,7 +17,7 @@ pipeline {
         }
         stage('push image') {
             steps{
-                sh 'docker push myapp/flask:$BUILD_NUMBER'
+                sh 'docker push stouzet1/flask:$BUILD_NUMBER'
             }
         }
 }
