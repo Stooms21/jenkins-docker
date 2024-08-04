@@ -1,7 +1,7 @@
 pipeline {
 	agent any
 	environment {
-		DOCKERHUB_CREDENTIALS = credentials('stooms-dockerhub)
+		DOCKERHUB_CREDENTIALS = credentials('stooms-dockerhub')
 		APP_NAME = "stouzet1/flask"
 	}
 	
