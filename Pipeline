@@ -18,6 +18,13 @@ pipeline {
 			}
 		}
 		
+	        stage('Update Dependencies') {
+			steps {
+				sh 'docker run --rm $APP_NAME:latest apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && apt-get autoremove -y && apt-get clean'
+				sh 'docker run --rm $APP_NAME:latest pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt'
+			}
+		}
+	
 		stage('Scan Docker Image') {
 			steps {
 				script {
