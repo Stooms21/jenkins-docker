@@ -1,0 +1,37 @@
+pipeline {
+	agent any
+	environment {
+		DOCKERHUB_CREDENTIALS = credentials('stooms-dockerhub)
+		APP_NAME = "stouzet1/flask"
+	}
+	
+	stages {
+		stage('SCM Checkout') {
+			steps {
+				git branch 'main', url: 'https://github.com/Stooms21/jenkins-docker'
+			}
+		}
+		
+		stage('Build docker iamge') {
+			steps {
+				sh 'docker build -t $APP_NAME:latest2 .'
+			}
+		}
+		
+		stage('Scan Docker Image') {
+			steps {
+				script {
+					def trivyOutput = sh(script: "trivy image $APP_NAME:latest",
+					
+					println trivyOutput
+					
+					if (trivyOuput.contains("Total : 0")) {
+						echo "No vulnerabilities found in the Docker image"
+					} else {
+						echo "Vulnerabilities found in the Docker image"
+					}
+				}
+			}
+		}
+	}
+}
