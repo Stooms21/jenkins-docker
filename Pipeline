@@ -8,7 +8,7 @@ pipeline {
 	stages {
 		stage('SCM Checkout') {
 			steps {
-				git branch 'main', url: 'https://github.com/Stooms21/jenkins-docker'
+				git branch: 'main', url: 'https://github.com/Stooms21/jenkins-docker'
 			}
 		}
 		
